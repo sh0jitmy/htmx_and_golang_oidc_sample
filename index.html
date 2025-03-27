@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTMX OIDC 認証</title>
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+</head>
+<body>
+
+    <h1>HTMX OIDC 認証</h1>
+    
+    <!-- OIDC ログインボタン -->
+    <button onclick="location.href='/login'">Googleでログイン</button>
+
+    <!-- 認証結果メッセージ -->
+    <div id="message"></div>
+
+    <!-- ユーザー情報表示 -->
+    <div id="userinfo"
+         hx-get="/userinfo"
+         hx-trigger="load"
+         hx-swap="innerHTML"
+         hx-on::after-request="if (event.detail.successful && !document.getElementById('auth-success')) { 
+            let msg = document.createElement('p');
+            msg.id = 'auth-success';
+            msg.style.color = 'green';
+            msg.innerText = '認証成功しました';
+            document.getElementById('message').appendChild(msg);
+         } else if (!event.detail.successful) { 
+            document.getElementById('message').innerHTML = '<p style=\'color: red;\'>認証に失敗しました</p>'; 
+         }">
+        <p>ユーザー情報を取得中...</p>
+    </div>
+
+</body>
+</html>
